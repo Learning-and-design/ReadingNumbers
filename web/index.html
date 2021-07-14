@@ -27,11 +27,11 @@
     </div>
     <script>
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/web july 7.loader.js";
+      var loaderUrl = buildUrl + "/Web 12 july.loader.js";
       var config = {
-        dataUrl: buildUrl + "/web july 7.data",
-        frameworkUrl: buildUrl + "/web july 7.framework.js",
-        codeUrl: buildUrl + "/web july 7.wasm",
+        dataUrl: buildUrl + "/Web 12 july.data",
+        frameworkUrl: buildUrl + "/Web 12 july.framework.js",
+        codeUrl: buildUrl + "/Web 12 july.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "CodeDotArt",
         productName: "Reading Numbers",
@@ -44,6 +44,8 @@
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var mobileWarning = document.querySelector("#unity-mobile-warning");
+	  
+	  var gameInstance; //  Game instance variable for data sync
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
@@ -64,6 +66,7 @@
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
+		gameInstance = unityInstance;
           loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
@@ -73,6 +76,26 @@
         });
       };
       document.body.appendChild(script);
+	  
+	    // Added by UBS team
+	     var messageData;
+
+
+
+      //CDA: Sending data to Unity
+      function SendDataToUnity(data) {
+
+        // Don't change this line.
+        gameInstance.SendMessage("GetData","ReceiveData",data);
+        }
+
+        function handleEvent(message) {
+          messageData = JSON.stringify(message.data);
+		 // SendDataToUnity(message.data);
+      }
+
+      document.addEventListener("message", handleEvent);
+	  
     </script>
   </body>
 </html>
